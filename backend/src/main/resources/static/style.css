@@ -1,0 +1,116 @@
+/* Form container */
+.login-form {
+    width: 100%;
+    max-width: 350px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input fields */
+.login-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: none;
+    background-color: #f5f5f8; 
+    font-size: 0.95rem;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Password container */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
+.forgot-link {
+    font-size: 0.85rem;
+    color: #0d6efd;
+    text-decoration: none;
+    align-self: flex-end;
+    margin-top: -5px;
+    margin-bottom: 5px;
+}
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 12px;
+    background-color: #111827;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.btn-login:hover {
+    background-color: #1f2937;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.login-header img {
+    width: 300px !important;
+    height: auto;
+    margin-bottom: 10px;
+}
+.login-header h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+.login-header a{
+    
+    text-decoration: none;
+}
+.login-header a:hover{
+    text-decoration: underline;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-container i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.input-container input {
+    padding-left: 35px; 
+}
+
+.key{
+     position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.password-container input {
+    padding-left: 35px; 
+}

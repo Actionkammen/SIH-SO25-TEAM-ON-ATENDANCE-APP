@@ -11,10 +11,10 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: create-drop   # clears on restart
+      ddl-auto: update   
     show-sql: true
-    generate-ddl: true
+    generate-ddl: true 
 
 jwt:
-  secret: mysecretdonttell
+  secret: bXlTZWNyZXRLZXlUaGF0SXNMb25nRW5vdWdoRm9ySFM1MTJBbGdvcml0aG0xMjM0NTY3ODkwYWJjZGVmZ2hpams=
   expiration: 86400000

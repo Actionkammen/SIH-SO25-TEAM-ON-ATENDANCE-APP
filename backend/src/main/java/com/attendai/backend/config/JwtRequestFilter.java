@@ -28,12 +28,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            @org.springframework.lang.NonNull HttpServletRequest request,
-            @org.springframework.lang.NonNull HttpServletResponse response,
-            @org.springframework.lang.NonNull FilterChain chain)
-            throws ServletException, IOException {
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("Authorization Header: " + authorizationHeader);
+
         String email = null;
         String jwt = null;
 
@@ -43,11 +44,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var user = userRepo.findByEmail(email).orElse(null);
+            UserDetails userDetails = userRepo.findByEmailIgnoreCase(email).orElse(null);
 
-            if (user != null && user instanceof UserDetails && jwtUtil.validateToken(jwt, (UserDetails) user)) {
-                var authToken = new UsernamePasswordAuthenticationToken(
-                        user, null, ((UserDetails) user).getAuthorities());
+            if (userDetails != null && jwtUtil.validateToken(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

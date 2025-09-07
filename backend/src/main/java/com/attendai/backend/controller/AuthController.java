@@ -1,9 +1,10 @@
 package com.attendai.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ import com.attendai.backend.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AuthController {
 
     @Autowired
@@ -37,11 +38,13 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-        if (userRepo.findByEmail(request.getEmail()).isPresent()) {
-            return "Email already exists";
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        // Check if email already exists
+        if (userRepo.findByEmailIgnoreCase(request.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists");
         }
 
+        // Create new user
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
@@ -50,20 +53,33 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.valueOf(request.getRole()));
 
+        // Save to database
         userRepo.save(user);
-        return "User registered successfully";
+
+        return ResponseEntity.ok("User registered successfully");
     }
 
-    @PostMapping("/login")
-    public JwtResponse login(@RequestBody LoginRequest request) {
-        authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        @PostMapping("/login")
+        public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+            System.out.println("👉 Login Attempt: " + request.getEmail());
 
-        final User userDetails = userRepo.findByEmail(request.getEmail()).orElse(null);
-        final String token = jwtUtil.generateToken((UserDetails) userDetails);
+            try {
+                var authToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
+                authManager.authenticate(authToken);
+                System.out.println("✅ Authentication SUCCESS");
 
-        // Use userDetails.getRole().toString() to get the role as authorities
-        return new JwtResponse(token, userDetails.getRole().toString(), userDetails.getEmail());
+                User userDetails = userRepo.findByEmailIgnoreCase(request.getEmail())
+                        .orElseThrow(() -> new RuntimeException("User not found in DB"));
+
+                String token = jwtUtil.generateToken(userDetails);
+                return ResponseEntity.ok(new JwtResponse(token, "ROLE_" + userDetails.getRole(), userDetails.getName()));
+
+            } catch (BadCredentialsException e) {
+                System.out.println("❌ Bad Credentials: " + e.getMessage());
+                return ResponseEntity.status(403).body("Invalid email or password");
+            } catch (Exception e) {
+                System.out.println("❌ Other Error: " + e.getMessage());
+                return ResponseEntity.status(500).body("Login failed: " + e.getMessage());
+        }
     }
 }
