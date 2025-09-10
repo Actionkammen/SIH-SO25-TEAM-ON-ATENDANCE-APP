@@ -3,7 +3,7 @@ import cv2
 import os
 import time
 
-# Folder containing known faces
+# Folder containing known faces-work like a DB
 dataset_path = "C:/Users/Vaish/Desktop/face"
 
 # Load all known faces into dictionary
@@ -46,20 +46,20 @@ while True:
                     enforce_detection=False
                 )
                 if result["verified"]:
-                    result_text = "Matched"
+                    result_text = f"Matched {name}"
                     break
         except Exception:
             result_text = "No face detected"
 
     # Show result on video
     cv2.putText(frame, result_text, (50, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
 
     out.write(frame)
     cv2.imshow("Video Live", frame)
 
-    if time.time() - start_time > 30:
-        print("Recording finished: 30 seconds")
+    if time.time() - start_time > 40:
+        print("Recording finished: 40 seconds")
         break
 
     if cv2.waitKey(10) & 0xFF == ord("a"):
