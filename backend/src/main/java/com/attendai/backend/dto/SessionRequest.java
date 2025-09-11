@@ -1,12 +1,27 @@
 package com.attendai.backend.dto;
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 // DTOs
 public class SessionRequest {
+    @NotBlank(message = "Subject is required")
     private String subject;
+
+    @NotNull(message = "Start time is required")
     private LocalDateTime startTime;
+
+    @NotNull(message = "End time is required")
     private LocalDateTime endTime;
+
+    @NotBlank(message = "Location is required")
     private String location;
+
+    @NotBlank(message = "Department is required")
     private String department;
+
+    
+
 
     // Getters & Setters
     public String getSubject() { return subject; }

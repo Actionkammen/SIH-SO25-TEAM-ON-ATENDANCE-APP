@@ -1,16 +1,13 @@
 package com.attendai.backend.dto;
-
-
 public class UnifiedRequest {
     private String type;
     private String email;
     private Long sessionId;
+
     private RegisterRequest registerRequest;
     private LoginRequest loginRequest;
     private AttendanceRequest attendanceRequest;
-
-    public UnifiedRequest() {
-    }
+    private SessionRequest sessionRequest;
 
     // Getters & Setters
     public String getType() { return type; }
@@ -30,4 +27,7 @@ public class UnifiedRequest {
 
     public AttendanceRequest getAttendanceRequest() { return attendanceRequest; }
     public void setAttendanceRequest(AttendanceRequest attendanceRequest) { this.attendanceRequest = attendanceRequest; }
+
+    public SessionRequest getSessionRequest() { return sessionRequest; }
+    public void setSessionRequest(SessionRequest sessionRequest) { this.sessionRequest = sessionRequest; }
 }
